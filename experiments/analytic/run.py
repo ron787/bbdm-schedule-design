@@ -89,31 +89,6 @@ def ddim_variance(steps, precision):
     return np.prod(gain, axis=0) ** 2
 
 
-def figure1(output):
-    steps = np.arange(201)
-    columns = [steps]
-    names = ["step"]
-    fig, axes = plt.subplots(1, 2, figsize=(9, 3.3))
-    for name, (alpha, beta, c, gamma) in SCHEDULES.items():
-        m = 1.0 - (1.0 - (steps / 200.0) ** alpha) ** beta
-        delta = c * (4.0 * m * (1.0 - m)) ** gamma
-        columns.extend([m, delta])
-        names.extend([f"m_{name}", f"delta_{name}"])
-        axes[0].plot(steps, m, label=name)
-        axes[1].plot(steps, delta, label=name)
-    for ax in axes:
-        ax.set_xlabel("Step s")
-        ax.legend()
-        ax.grid(alpha=0.2)
-    axes[0].set_ylabel(r"$m_s$")
-    axes[1].set_ylabel(r"$\delta_s$")
-    fig.tight_layout()
-    fig.savefig(output / "figure1.png", dpi=180)
-    plt.close(fig)
-    save_csv(output / "figure1.csv", np.column_stack(columns), names)
-    return {"S": 200, "schedules": SCHEDULES, "mode": "full"}
-
-
 def crossings(steps, difference):
     changes = np.flatnonzero(difference[1:] * difference[:-1] < 0)
     return [
@@ -450,7 +425,7 @@ def main():
     parser.add_argument(
         "--experiment",
         required=True,
-        choices=("figure1", "figure3", "figure5", "table-d6"),
+        choices=("figure3", "figure5", "table-d6"),
     )
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument(
@@ -470,9 +445,7 @@ def main():
     args.output.mkdir(parents=True, exist_ok=True)
     started_at = datetime.now(timezone.utc).isoformat()
     started = time.perf_counter()
-    if args.experiment == "figure1":
-        config = figure1(args.output)
-    elif args.experiment == "figure3":
+    if args.experiment == "figure3":
         config = figure3(args.output)
     elif args.experiment == "figure5":
         config = figure5(args.output, args.quick, args.workers)

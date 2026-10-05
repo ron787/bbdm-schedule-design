@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Figure 6: Gaussian-mixture responsibility concentration, entirely on CPU.
+"""Fresh CPU simulation of Figure 6's Gaussian-mixture experiment.
 
-Default execution generates fresh data using the historical scientific protocol.
-NumPy and historical CUDA RNGs differ; reproduction is statistical, not bitwise.
-Use --plot-reference only to render the separately preserved historical results.
+NumPy uses different random draws from the paper's original CUDA run, so
+reproduction is statistical rather than bitwise.
 """
 
 import os
@@ -197,7 +196,7 @@ def write_csv(path, rows):
         writer.writerows(rows)
 
 
-def plot(rows, output, config, historical=False):
+def plot(rows, output, config):
     import matplotlib
 
     matplotlib.use("Agg")
@@ -229,27 +228,24 @@ def plot(rows, output, config, historical=False):
             line = ax.plot(
                 xx[positive], yy[positive], marker=marker, ms=4, label=f"R={R}"
             )[0]
-            if not historical:
-                lower = np.array([r[metric + "_ci95_low"] for r in values])
-                upper = np.array([r[metric + "_ci95_high"] for r in values])
-                if metric != "separation":
-                    lower = np.where(lower > 0, lower, np.nan)
-                if len(xx) == 1:
-                    ax.vlines(xx, lower, upper, color=line.get_color(), alpha=0.5)
-                else:
-                    ax.fill_between(
-                        xx, lower, upper, color=line.get_color(), alpha=0.12
-                    )
-                if metric == "selected_label_error":
-                    for row in values:
-                        if row["failures"] == 0:
-                            ax.scatter(
-                                row["d"],
-                                row["zero_error_conditional_upper95"],
-                                marker="v",
-                                facecolors="none",
-                                edgecolors=line.get_color(),
-                            )
+            lower = np.array([r[metric + "_ci95_low"] for r in values])
+            upper = np.array([r[metric + "_ci95_high"] for r in values])
+            if metric != "separation":
+                lower = np.where(lower > 0, lower, np.nan)
+            if len(xx) == 1:
+                ax.vlines(xx, lower, upper, color=line.get_color(), alpha=0.5)
+            else:
+                ax.fill_between(xx, lower, upper, color=line.get_color(), alpha=0.12)
+            if metric == "selected_label_error":
+                for row in values:
+                    if row["failures"] == 0:
+                        ax.scatter(
+                            row["d"],
+                            row["zero_error_conditional_upper95"],
+                            marker="v",
+                            facecolors="none",
+                            edgecolors=line.get_color(),
+                        )
         if metric == "separation":
             theory = [
                 (2 / 3) * np.mean(1 / (np.geomspace(0.5, 2, d) + 4)) for d in dims
@@ -271,23 +267,18 @@ def plot(rows, output, config, historical=False):
         ax.set_ylabel(ylabel, fontsize=9)
         ax.grid(alpha=0.2)
     axes[0, 0].legend(fontsize=8, ncol=2)
-    if historical:
-        heading = "Figure 6 — saved historical values; no simulation"
-        filename = "figure6_reference.png"
-    else:
-        settings = (
-            "paper settings" if config["matches_paper_settings"] else "custom settings"
-        )
-        mode = "quick CPU simulation" if config["quick"] else "fresh CPU simulation"
-        heading = f"Figure 6 — {mode} ({settings}): {config['n_mixtures']:,} priors × {config['n_samples_per_mixture']} paths"
-        heading += (
-            f"\nR={','.join(map(str, components))}; d={','.join(map(str, dims))}; "
-            f"S={steps}; seed={config['seed']}"
-        )
-        heading += "\nBands/bars: approximate cluster 95% CI; open triangles: zero-error conditional upper bounds"
-        filename = "figure6.png"
+    settings = (
+        "paper settings" if config["matches_paper_settings"] else "custom settings"
+    )
+    mode = "quick CPU simulation" if config["quick"] else "fresh CPU simulation"
+    heading = f"Figure 6 — {mode} ({settings}): {config['n_mixtures']:,} priors × {config['n_samples_per_mixture']} paths"
+    heading += (
+        f"\nR={','.join(map(str, components))}; d={','.join(map(str, dims))}; "
+        f"S={steps}; seed={config['seed']}"
+    )
+    heading += "\nBands/bars: approximate cluster 95% CI; open triangles: zero-error conditional upper bounds"
     fig.suptitle(heading, fontsize=11)
-    fig.savefig(output / filename, dpi=170)
+    fig.savefig(output / "figure6.png", dpi=170)
     plt.close(fig)
 
 
@@ -325,11 +316,6 @@ def main():
         default=None,
         help="Nonnegative random seed (default: 0).",
     )
-    parser.add_argument(
-        "--plot-reference",
-        action="store_true",
-        help="Render saved historical values only; perform no simulation.",
-    )
     args = parser.parse_args()
     if args.workers < 1:
         parser.error("--workers must be positive")
@@ -342,33 +328,7 @@ def main():
         value = getattr(args, name)
         if value is not None and value < minimum:
             parser.error(f"--{name} must be at least {minimum}")
-    if args.plot_reference and args.quick:
-        parser.error("--quick and --plot-reference are distinct modes")
-    if args.plot_reference and any(
-        value is not None
-        for value in (args.components, args.dimension, args.steps, args.seed)
-    ):
-        parser.error("Scientific parameters cannot be overridden with --plot-reference")
     args.output.mkdir(parents=True, exist_ok=True)
-    if args.plot_reference:
-        saved = json.loads(
-            (
-                Path(__file__).resolve().parent / "references/historical_run.json"
-            ).read_text()
-        )
-        rows = sorted(saved["results"], key=lambda r: (r["R"], r["d"]))
-        result = dict(
-            mode="saved historical values; no simulation",
-            config=saved["config"],
-            results=rows,
-        )
-        (args.output / "reference_results.json").write_text(
-            json.dumps(result, indent=2)
-        )
-        write_csv(args.output / "reference_results.csv", rows)
-        plot(rows, args.output, saved["config"], historical=True)
-        print("Rendered saved historical Figure 6 values; no simulation performed.")
-        return
     components = [args.components] if args.components is not None else list(COMPONENTS)
     dims = [args.dimension] if args.dimension is not None else list(DIMS)
     steps = args.steps if args.steps is not None else 20

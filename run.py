@@ -12,7 +12,6 @@ import time
 
 ROOT = Path(__file__).resolve().parent
 EXPERIMENTS = {
-    "figure1": "analytic",
     "figure2": "clouds",
     "figure3": "analytic",
     "figure5": "analytic",
@@ -44,11 +43,6 @@ def main():
         default=ROOT / "results",
         help="Parent directory for generated results (default: results/).",
     )
-    parser.add_argument(
-        "--saved",
-        action="store_true",
-        help="For figure6 only: plot the saved paper data without simulation.",
-    )
     model = parser.add_argument_group("model settings (figure2, figure6 or figure7)")
     model.add_argument(
         "--components",
@@ -73,17 +67,14 @@ def main():
         )
     if args.workers < 1:
         parser.error("--workers must be positive.")
-    if args.saved and (args.experiment != "figure6" or args.quick):
-        parser.error("--saved is available only for figure6, without --quick.")
-
     overrides = {
         name: getattr(args, name)
         for name in MODEL_OPTIONS
         if getattr(args, name) is not None
     }
-    if overrides and (args.experiment not in SYNTHETIC or args.saved):
+    if overrides and args.experiment not in SYNTHETIC:
         parser.error(
-            "Model settings require figure2, figure6 or figure7, without --saved. "
+            "Model settings require figure2, figure6 or figure7. "
             "Choose one of these experiments instead of all to customize it."
         )
     for name, minimum in (
@@ -100,7 +91,7 @@ def main():
     selected = list(EXPERIMENTS) if args.experiment == "all" else [args.experiment]
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
-    mode = "saved paper data" if args.saved else ("quick" if args.quick else "full")
+    mode = "quick" if args.quick else "full"
     print(f"CPU experiments: {mode} mode. Results: {output}", flush=True)
     if args.quick:
         print(
@@ -136,7 +127,7 @@ def main():
     }
     for name in selected:
         module = ROOT / "experiments" / EXPERIMENTS[name] / "run.py"
-        directory = output / ("figure6_saved" if args.saved else name)
+        directory = output / name
         command = [
             sys.executable,
             str(module),
@@ -149,8 +140,6 @@ def main():
         ]
         if args.quick:
             command.append("--quick")
-        if args.saved:
-            command.append("--plot-reference")
         for option_name, value in overrides.items():
             command.extend([f"--{option_name}", str(value)])
         print(f"\nRunning {name}...", flush=True)
