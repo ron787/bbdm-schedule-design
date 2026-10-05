@@ -1,6 +1,6 @@
 # BBDM schedule design
 
-CPU code for **Mixture-of-Gaussians-Guided Schedule Design for Brownian Bridge
+Code for **Mixture-of-Gaussians-Guided Schedule Design for Brownian Bridge
 Diffusion Models**, by Ron Levy and Michael Elad, accepted at TMLR (2026).
 [Paper](https://openreview.net/forum?id=NHccmvrBPO).
 
