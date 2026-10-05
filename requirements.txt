@@ -1,0 +1,4 @@
+# Tested on Python 3.12.14. All experiments run on CPU.
+numpy==2.3.5
+scipy==1.17.0
+matplotlib==3.10.8

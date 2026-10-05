@@ -1,0 +1,299 @@
+{
+  "config": {
+    "dims": [
+      16,
+      32,
+      64,
+      128,
+      256,
+      512
+    ],
+    "Rs": [
+      2,
+      4,
+      8,
+      16
+    ],
+    "S": 20,
+    "sigma_y": 2.0,
+    "cov_min": 0.5,
+    "cov_max": 2.0,
+    "n_mixtures": 4096,
+    "n_samples_per_mixture": 64,
+    "mixture_batch_size": 16,
+    "seed": 0,
+    "label_mode": "sample",
+    "dtype": "float64",
+    "alpha": 1.0,
+    "beta": 1.0,
+    "schedule_c": 0.5,
+    "schedule_gamma": 1.0,
+    "min_plot_value": 1e-30
+  },
+  "results": [
+    {
+      "R": 2,
+      "d": 16,
+      "separation": 0.13184623613793878,
+      "selected_label_error": 0.3742828369140625,
+      "denoiser_gap": 0.02678593504786663,
+      "final_gap": 0.08798557330677602,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:0"
+    },
+    {
+      "R": 4,
+      "d": 64,
+      "separation": 0.10891431647225289,
+      "selected_label_error": 0.22538375854492188,
+      "denoiser_gap": 0.01436987638946411,
+      "final_gap": 0.07883560276890536,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:0"
+    },
+    {
+      "R": 8,
+      "d": 256,
+      "separation": 0.11355180498844593,
+      "selected_label_error": 0.010219573974609375,
+      "denoiser_gap": 0.0004948461895616808,
+      "final_gap": 0.006035807211314085,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:0"
+    },
+    {
+      "R": 2,
+      "d": 32,
+      "separation": 0.13153798095438027,
+      "selected_label_error": 0.23250961303710938,
+      "denoiser_gap": 0.015578045616770477,
+      "final_gap": 0.06611625613966599,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:1"
+    },
+    {
+      "R": 4,
+      "d": 128,
+      "separation": 0.11565859444387344,
+      "selected_label_error": 0.061283111572265625,
+      "denoiser_gap": 0.0032896565962371605,
+      "final_gap": 0.02695063684702767,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:1"
+    },
+    {
+      "R": 8,
+      "d": 512,
+      "separation": 0.11887592486640176,
+      "selected_label_error": 8.0108642578125e-05,
+      "denoiser_gap": 4.391360177098378e-06,
+      "final_gap": 7.310647107255781e-05,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:1"
+    },
+    {
+      "R": 2,
+      "d": 64,
+      "separation": 0.13178323536124784,
+      "selected_label_error": 0.10123062133789062,
+      "denoiser_gap": 0.006143327024501568,
+      "final_gap": 0.0360221945198082,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:2"
+    },
+    {
+      "R": 4,
+      "d": 256,
+      "separation": 0.12041192103941672,
+      "selected_label_error": 0.0048675537109375,
+      "denoiser_gap": 0.00023502897679093115,
+      "final_gap": 0.0028910677744139845,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:2"
+    },
+    {
+      "R": 16,
+      "d": 16,
+      "separation": 0.04875266497165652,
+      "selected_label_error": 0.8884696960449219,
+      "denoiser_gap": 0.08046415555339077,
+      "final_gap": 0.2028781819047236,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:2"
+    },
+    {
+      "R": 2,
+      "d": 128,
+      "separation": 0.1321106812775667,
+      "selected_label_error": 0.02338409423828125,
+      "denoiser_gap": 0.0012331782593537864,
+      "final_gap": 0.010449459663145456,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:3"
+    },
+    {
+      "R": 4,
+      "d": 512,
+      "separation": 0.12384021559514051,
+      "selected_label_error": 1.9073486328125e-05,
+      "denoiser_gap": 1.8492770601281633e-06,
+      "final_gap": 3.440546046987475e-05,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:3"
+    },
+    {
+      "R": 16,
+      "d": 32,
+      "separation": 0.06942662259344658,
+      "selected_label_error": 0.749847412109375,
+      "denoiser_gap": 0.06270385475687876,
+      "final_gap": 0.20118724798774182,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:3"
+    },
+    {
+      "R": 2,
+      "d": 256,
+      "separation": 0.13192348546603327,
+      "selected_label_error": 0.00177764892578125,
+      "denoiser_gap": 8.680256988989435e-05,
+      "final_gap": 0.0010602657680707137,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:0"
+    },
+    {
+      "R": 8,
+      "d": 16,
+      "separation": 0.06346740298985547,
+      "selected_label_error": 0.7920074462890625,
+      "denoiser_gap": 0.06768565498192218,
+      "final_gap": 0.1844098406893582,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:0"
+    },
+    {
+      "R": 16,
+      "d": 64,
+      "separation": 0.08624338009265932,
+      "selected_label_error": 0.49082183837890625,
+      "denoiser_gap": 0.035008649413646155,
+      "final_gap": 0.16507382391039738,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:0"
+    },
+    {
+      "R": 2,
+      "d": 512,
+      "separation": 0.13207827227880115,
+      "selected_label_error": 1.1444091796875e-05,
+      "denoiser_gap": 4.5532821742589556e-07,
+      "final_gap": 9.039370511073536e-06,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:1"
+    },
+    {
+      "R": 8,
+      "d": 32,
+      "separation": 0.0817366028603337,
+      "selected_label_error": 0.6177444458007812,
+      "denoiser_gap": 0.04843796088105274,
+      "final_gap": 0.17113840015384787,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:1"
+    },
+    {
+      "R": 16,
+      "d": 128,
+      "separation": 0.0988078425169653,
+      "selected_label_error": 0.18146133422851562,
+      "denoiser_gap": 0.010416308430329837,
+      "final_gap": 0.07778450200576391,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:1"
+    },
+    {
+      "R": 4,
+      "d": 16,
+      "separation": 0.08643493259981021,
+      "selected_label_error": 0.6290016174316406,
+      "denoiser_gap": 0.05001077423840275,
+      "final_gap": 0.1493219291599881,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:2"
+    },
+    {
+      "R": 8,
+      "d": 64,
+      "separation": 0.09590800625625057,
+      "selected_label_error": 0.358367919921875,
+      "denoiser_gap": 0.024164384924281235,
+      "final_gap": 0.12328878314849387,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:2"
+    },
+    {
+      "R": 16,
+      "d": 256,
+      "separation": 0.10816207278571187,
+      "selected_label_error": 0.01902008056640625,
+      "denoiser_gap": 0.0009225414254456685,
+      "final_gap": 0.010912276458087523,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:2"
+    },
+    {
+      "R": 4,
+      "d": 32,
+      "separation": 0.10011020533635592,
+      "selected_label_error": 0.44191741943359375,
+      "denoiser_gap": 0.032313812039988635,
+      "final_gap": 0.12584565868246814,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:3"
+    },
+    {
+      "R": 8,
+      "d": 128,
+      "separation": 0.10594398121335921,
+      "selected_label_error": 0.11272811889648438,
+      "denoiser_gap": 0.006270927971849277,
+      "final_gap": 0.049403768249886876,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:3"
+    },
+    {
+      "R": 16,
+      "d": 512,
+      "separation": 0.11498948317511654,
+      "selected_label_error": 0.000133514404296875,
+      "denoiser_gap": 8.09080912486319e-06,
+      "final_gap": 0.00015225431818113974,
+      "n_mixtures": 4096,
+      "n_samples_per_mixture": 64,
+      "device": "cuda:3"
+    }
+  ]
+}

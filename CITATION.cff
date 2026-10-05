@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this code in your research, please cite the paper below."
+title: "BBDM Schedule Design: Analytical and Synthetic Experiments"
+type: software
+authors:
+  - family-names: "Levy"
+    given-names: "Ron"
+  - family-names: "Elad"
+    given-names: "Michael"
+repository-code: "https://github.com/ron787/bbdm-schedule-design"
+license: MIT
+preferred-citation:
+  type: article
+  title: "Mixture-of-Gaussians-Guided Schedule Design for Brownian Bridge Diffusion Models"
+  authors:
+    - family-names: "Levy"
+      given-names: "Ron"
+    - family-names: "Elad"
+      given-names: "Michael"
+  journal: "Transactions on Machine Learning Research"
+  year: 2026
+  notes: "Accepted for publication."
+  url: "https://openreview.net/forum?id=NHccmvrBPO"
