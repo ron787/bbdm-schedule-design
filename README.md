@@ -34,9 +34,21 @@ python run.py figure2       # One experiment
 | `figure7` | Low-precision reversal |
 | `table-d6` | Finite-step variance-ratio table |
 
-Outputs go to `results/<experiment>/`: plots, numerical results and settings.
-Use `--output PATH` to keep separate runs; rerunning replaces previous outputs.
-`--workers N` controls CPU parallelism.
+Each experiment saves its files in its own folder. For example,
+`results/figure2/` contains the Figure 2 plot (PNG), numerical results (CSV)
+and run settings (JSON).
+
+To use two CPU workers and save Figure 2 under `my_run/figure2/`:
+
+```sh
+python run.py figure2 --workers 2 --output my_run
+```
+
+`--workers N` allows up to N CPU workers/threads (default: up to four).
+Use a positive integer, such as 1, 2 or 4, within your available CPU core count.
+Larger values can be slower or exceed system resources. Figure 3 runs serially.
+Choose a different `--output` folder to preserve earlier runs; reusing one
+overwrites its result files.
 
 ## Optional settings
 
@@ -54,10 +66,12 @@ python run.py figure2 --components 16 --dimension 128 --steps 10 --seed 42
 ```
 
 For Figure 6, setting R or d selects one value on that axis; omitting it keeps
-the sweep. Other scientific settings remain fixed. Custom and quick runs are
-identified in their outputs.
+the sweep. Other model settings, such as observation noise and component
+covariances, keep the paper's values. `--quick` reduces the simulation or search
+budgets for a faster check. The plots and saved settings indicate when these
+synthetic experiments use quick mode or parameters different from the paper.
 
-All calculations run fresh on CPU. Figure 2 uses the unnormalized objective.
+All calculations run fresh on CPU.
 Figure 6 uses the paper's scientific settings with NumPy random draws, so
 agreement with the original CUDA run is statistical rather than bitwise.
 
