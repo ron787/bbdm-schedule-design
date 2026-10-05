@@ -275,7 +275,10 @@ def plot(rows, output, config):
         f"\nR={','.join(map(str, components))}; d={','.join(map(str, dims))}; "
         f"S={steps}; seed={config['seed']}"
     )
-    heading += "\nBands/bars: approximate cluster 95% CI; open triangles: zero-error conditional upper bounds"
+    interval_style = "Bars" if len(dims) == 1 else "Bands"
+    heading += f"\n{interval_style}: approximate cluster 95% CI"
+    if any(row["failures"] == 0 for row in rows):
+        heading += "; open triangles: zero-error conditional upper bounds"
     fig.suptitle(heading, fontsize=11)
     fig.savefig(output / "figure6.png", dpi=170)
     plt.close(fig)

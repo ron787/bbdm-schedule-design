@@ -279,11 +279,26 @@ def reverse_cache(problem, parameters, steps, endpoint_eps=1e-6):
     m, delta = schedule(parameters, steps)
     delta = np.clip(delta.copy(), endpoint_eps, None)
     m[-1] = min(m[-1], 1.0 - endpoint_eps)
+    if np.any(np.diff(m) <= 0):
+        raise ValueError(
+            "Endpoint clipping makes adjacent schedule values equal or "
+            "decreasing. Reduce --steps."
+        )
     a = np.zeros(steps + 1, dtype=np.float64)
     b, c, sigma = a.copy(), a.copy(), a.copy()
+    roundoff = 64 * np.finfo(np.float64).eps
     for s in range(1, steps + 1):
         ratio = ((1.0 - m[s]) ** 2) / max((1.0 - m[s - 1]) ** 2, 1e-16)
-        conditional_delta = max(delta[s] - delta[s - 1] * ratio, 1e-16)
+        previous_delta = delta[s - 1] * ratio
+        conditional_delta = delta[s] - previous_delta
+        # Allow roundoff in the subtraction, but reject an infeasible bridge.
+        tolerance = roundoff * max(1.0, delta[s], previous_delta)
+        if conditional_delta < -tolerance:
+            raise ValueError(
+                f"Numerical clipping makes the conditional bridge variance "
+                f"negative at step {s}. Reduce --steps."
+            )
+        conditional_delta = max(conditional_delta, 1e-16)
         variance = max(conditional_delta * delta[s - 1] / max(delta[s], 1e-16), 1e-16)
         sigma[s] = math.sqrt(variance)
         inside = (delta[s - 1] - variance) / max(delta[s], 1e-16)

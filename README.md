@@ -9,7 +9,8 @@ trained image-model experiments are outside this repository.
 
 ## Install
 
-Requires Python 3.11 or newer; tested with Python 3.12. With Conda installed:
+Requires Python 3.11 or newer; tested with Python 3.12. With Conda installed,
+run these commands in order, waiting for each to finish successfully:
 
 ```sh
 git clone https://github.com/ron787/bbdm-schedule-design.git
@@ -22,8 +23,13 @@ python -m pip install -r requirements.txt
 ## Run
 
 ```sh
-python run.py all       # All experiments with the paper's settings
-python run.py figure2   # One experiment
+python run.py all
+```
+
+To run just one experiment:
+
+```sh
+python run.py figure2
 ```
 
 | Experiment | Result |

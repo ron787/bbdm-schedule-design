@@ -199,7 +199,12 @@ def plot(rows, schedules, experiment, output, custom_settings=None):
 def main():
     args = parse_args()
     # Configure CPU threads before importing libraries that initialize BLAS.
-    for variable in ["OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS", "MKL_NUM_THREADS"]:
+    for variable in (
+        "OPENBLAS_NUM_THREADS",
+        "OMP_NUM_THREADS",
+        "MKL_NUM_THREADS",
+        "VECLIB_MAXIMUM_THREADS",
+    ):
         os.environ[variable] = str(args.workers)
     import numpy as np
     import scipy
