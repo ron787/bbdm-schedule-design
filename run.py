@@ -27,11 +27,6 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("experiment", choices=["all", *EXPERIMENTS])
     parser.add_argument(
-        "--quick",
-        action="store_true",
-        help="Use smaller simulation/search budgets to check the installation.",
-    )
-    parser.add_argument(
         "--workers",
         type=int,
         default=min(4, os.cpu_count() or 1),
@@ -91,13 +86,7 @@ def main():
     selected = list(EXPERIMENTS) if args.experiment == "all" else [args.experiment]
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
-    mode = "quick" if args.quick else "full"
-    print(f"CPU experiments: {mode} mode. Results: {output}", flush=True)
-    if args.quick:
-        print(
-            "Quick mode uses reduced budgets; omit --quick for full simulation budgets.",
-            flush=True,
-        )
+    print(f"CPU experiments. Results: {output}", flush=True)
     if overrides:
         print(
             "Requested model settings: "
@@ -118,7 +107,7 @@ def main():
         env[key] = "1"
     env["MPLBACKEND"] = "Agg"
     summary = {
-        "mode": mode,
+        "mode": "full",
         "started_utc": datetime.now(timezone.utc).isoformat(),
         "python": sys.version.split()[0],
         "workers": args.workers,
@@ -138,8 +127,6 @@ def main():
             "--workers",
             str(args.workers),
         ]
-        if args.quick:
-            command.append("--quick")
         for option_name, value in overrides.items():
             command.extend([f"--{option_name}", str(value)])
         print(f"\nRunning {name}...", flush=True)

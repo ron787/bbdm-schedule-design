@@ -196,17 +196,16 @@ def paired_variances(rho, precision, rows, columns, blocks=None):
     return result
 
 
-def regime_grid(job):
+def regime_grid(S):
     """Minimize the exact objective over the entire declared finite grid."""
-    S, quick = job
     started = time.perf_counter()
-    counts = (5, 5, 5, 5) if quick else (21, 21, 15, 15)
+    counts = (21, 21, 15, 15)
     axes = [
         np.linspace(lo, hi, count)
         for lo, hi, count in zip((1, 1, 0.2, 0.2), (2, 2, 2, 2), counts)
     ]
     theta = np.stack(np.meshgrid(*axes, indexing="ij"), axis=-1).reshape(-1, 4)
-    precision = np.geomspace(1e-3, 1e4, 101 if quick else 701)
+    precision = np.geomspace(1e-3, 1e4, 701)
     edges = np.asarray([SCHEDULES["MSE"], SCHEDULES["W2"], INTERMEDIATE])
     edge_variances = np.array([bbdm_variance(S, p, precision) for p in edges])
     best_edge = np.argmin(edge_variances, axis=0)
@@ -267,8 +266,8 @@ def parallel_map(function, jobs, workers):
         return list(executor.map(function, jobs))
 
 
-def figure5(output, quick, workers):
-    results = parallel_map(regime_grid, [(S, quick) for S in STEP_BUDGETS], workers)
+def figure5(output, workers):
+    results = parallel_map(regime_grid, list(STEP_BUDGETS), workers)
     colors = {
         (2.0, 1.0, 0.2, 2.0): "tab:blue",
         INTERMEDIATE: "tab:orange",
@@ -332,11 +331,11 @@ def figure5(output, quick, workers):
     plt.close(fig)
     save_json(output / "figure5_transitions.json", summary)
     return {
-        "mode": "quick-reduced-grid" if quick else "full",
+        "mode": "full",
         "S": STEP_BUDGETS,
-        "grid_counts": [5, 5, 5, 5] if quick else [21, 21, 15, 15],
+        "grid_counts": [21, 21, 15, 15],
         "precision_range": [1e-3, 1e4],
-        "precision_count": 101 if quick else 701,
+        "precision_count": 701,
         "candidate_pairs": sum(r["candidate_pairs"] for r in results),
         "workers": min(workers, 4),
         "method": "Complete finite grid with rigorous positive-term lower-bound pruning",
@@ -429,11 +428,6 @@ def main():
     )
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument(
-        "--quick",
-        action="store_true",
-        help="Use a clearly marked reduced grid for Figure 5 only.",
-    )
-    parser.add_argument(
         "--workers",
         type=int,
         default=1,
@@ -448,7 +442,7 @@ def main():
     if args.experiment == "figure3":
         config = figure3(args.output)
     elif args.experiment == "figure5":
-        config = figure5(args.output, args.quick, args.workers)
+        config = figure5(args.output, args.workers)
     else:
         config = table_d6(args.output, args.workers)
     config.update(

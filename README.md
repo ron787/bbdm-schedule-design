@@ -9,20 +9,21 @@ trained image-model experiments are outside this repository.
 
 ## Install
 
-Requires Python 3.11 or newer.
+Requires Python 3.11 or newer; tested with Python 3.12. With Conda installed:
 
 ```sh
 git clone https://github.com/ron787/bbdm-schedule-design.git
 cd bbdm-schedule-design
+conda create -n bbdm_cpu python=3.12 pip -y
+conda activate bbdm_cpu
 python -m pip install -r requirements.txt
 ```
 
 ## Run
 
 ```sh
-python run.py all --quick   # Smaller budgets to check the installation
-python run.py all           # Full paper settings
-python run.py figure2       # One experiment
+python run.py all       # All experiments with the paper's settings
+python run.py figure2   # One experiment
 ```
 
 | Experiment | Result |
@@ -67,9 +68,8 @@ python run.py figure2 --components 16 --dimension 128 --steps 10 --seed 42
 
 For Figure 6, setting R or d selects one value on that axis; omitting it keeps
 the sweep. Other model settings, such as observation noise and component
-covariances, keep the paper's values. `--quick` reduces the simulation or search
-budgets for a faster check. The plots and saved settings indicate when these
-synthetic experiments use quick mode or parameters different from the paper.
+covariances, keep the paper's values. The plots and saved settings indicate
+when these synthetic experiments use parameters different from the paper.
 
 All calculations run fresh on CPU.
 Figure 6 uses the paper's scientific settings with NumPy random draws, so

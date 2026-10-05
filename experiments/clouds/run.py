@@ -19,11 +19,6 @@ def parse_args():
         help="Directory for CSV, JSON, and PNG results.",
     )
     parser.add_argument(
-        "--quick",
-        action="store_true",
-        help="Use 8 measurements, 64 samples, and 32 projections for a smoke run.",
-    )
-    parser.add_argument(
         "--workers",
         type=int,
         default=1,
@@ -71,7 +66,7 @@ def save_csv(path, rows):
         writer.writerows(rows)
 
 
-def plot(rows, schedules, experiment, output, quick, custom_settings=None):
+def plot(rows, schedules, experiment, output, custom_settings=None):
     import numpy as np
     import matplotlib
 
@@ -140,13 +135,10 @@ def plot(rows, schedules, experiment, output, quick, custom_settings=None):
     ax.set(xlabel="MSE to true $x_0$", ylabel="Sliced $W_2$")
     if custom_settings is not None:
         components, dimension, steps, seed = custom_settings
-        prefix = "Quick custom run" if quick else "Custom run"
         ax.set_title(
-            f"{prefix}: R={components}, d={dimension}, S={steps}, seed={seed}",
+            f"Custom run: R={components}, d={dimension}, S={steps}, seed={seed}",
             fontsize=10,
         )
-    elif quick:
-        ax.set_title("Quick run: reduced sample counts", fontsize=10)
     ax.spines[["top", "right"]].set_visible(False)
     ax.grid(alpha=0.15)
     position = (
@@ -214,7 +206,7 @@ def main():
     import model
 
     started = time.perf_counter()
-    measurements, samples, projections = (8, 64, 32) if args.quick else (100, 256, 256)
+    measurements, samples, projections = 100, 256, 256
     steps, restarts, endpoint_eps = args.steps, 16, 1e-6
     args.output.mkdir(parents=True, exist_ok=True)
     problem = model.make_problem(
@@ -323,8 +315,7 @@ def main():
     save_csv(args.output / "summary.csv", summaries)
     settings = {
         "experiment": args.experiment,
-        "quick": args.quick,
-        "matches_paper_settings": custom_settings is None and not args.quick,
+        "matches_paper_settings": custom_settings is None,
         "seed": args.seed,
         "components": problem.components,
         "dimension": problem.dimension,
@@ -355,7 +346,7 @@ def main():
     (args.output / "schedules.json").write_text(
         json.dumps(schedules, indent=2) + "\n", encoding="utf-8"
     )
-    plot(rows, schedules, args.experiment, args.output, args.quick, custom_settings)
+    plot(rows, schedules, args.experiment, args.output, custom_settings)
     print(
         f"Saved results to {args.output.resolve()} ({settings['computation_seconds']:.1f} seconds of computation)."
     )

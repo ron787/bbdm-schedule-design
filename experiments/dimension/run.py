@@ -270,8 +270,7 @@ def plot(rows, output, config):
     settings = (
         "paper settings" if config["matches_paper_settings"] else "custom settings"
     )
-    mode = "quick CPU simulation" if config["quick"] else "fresh CPU simulation"
-    heading = f"Figure 6 — {mode} ({settings}): {config['n_mixtures']:,} priors × {config['n_samples_per_mixture']} paths"
+    heading = f"Figure 6 — fresh CPU simulation ({settings}): {config['n_mixtures']:,} priors × {config['n_samples_per_mixture']} paths"
     heading += (
         f"\nR={','.join(map(str, components))}; d={','.join(map(str, dims))}; "
         f"S={steps}; seed={config['seed']}"
@@ -286,11 +285,6 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--experiment", choices=["figure6"], default="figure6")
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument(
-        "--quick",
-        action="store_true",
-        help="Smoke run: 32 priors × 16 paths per selected condition.",
-    )
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument(
         "--components",
@@ -334,16 +328,15 @@ def main():
     steps = args.steps if args.steps is not None else 20
     seed = args.seed if args.seed is not None else 0
     matches_paper_settings = (
-        not args.quick
-        and components == list(COMPONENTS)
+        components == list(COMPONENTS)
         and dims == list(DIMS)
         and steps == 20
         and seed == 0
     )
     config = dict(
         seed=seed,
-        n_mixtures=32 if args.quick else 4096,
-        n_samples_per_mixture=16 if args.quick else 64,
+        n_mixtures=4096,
+        n_samples_per_mixture=64,
         mixture_batch_size=16,
         S=steps,
         sigma_y=2.0,
@@ -362,7 +355,6 @@ def main():
         local_gap=f"Squared Euclidean gap/d, averaged over all {steps} denoiser calls",
         stability=f"Argmax matches selected label at all {steps - 1} interior states",
         uncertainty="Approximate Student-t 95% intervals across independent priors; rare-event tails can be poorly resolved. Zero-error upper bounds condition on the sampled prior ensemble.",
-        quick=args.quick,
         matches_paper_settings=matches_paper_settings,
         workers=args.workers,
     )
