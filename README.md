@@ -14,8 +14,8 @@ Requires Python 3.11 or newer; tested with Python 3.12. With Conda installed:
 ```sh
 git clone https://github.com/ron787/bbdm-schedule-design.git
 cd bbdm-schedule-design
-conda create -n bbdm_cpu python=3.12 pip -y
-conda activate bbdm_cpu
+conda create -n bbdm_schedule_design python=3.12 pip -y
+conda activate bbdm_schedule_design
 python -m pip install -r requirements.txt
 ```
 
