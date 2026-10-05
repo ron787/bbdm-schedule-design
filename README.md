@@ -9,13 +9,11 @@ This repository covers the analytical calculations and synthetic Gaussian-mixtur
 experiments in Figures 1, 2, 3, 5, 6 and 7, and the Appendix D.6 table.
 It uses Python, NumPy, SciPy and Matplotlib. All calculations run on CPU.
 
-The MNIST fitted-prior experiments in Figures 8–9 and Section 8.4, and the
-trained-model, FFHQ and DPS experiments, are outside this release. This is code
-for the analytical and synthetic part of the paper, not its complete image pipeline.
+The MNIST fitted-prior experiments FFHQ experiments, are outside this release.
 
 ## Install
 
-Use Python 3.11 or newer; Python 3.12.14 was tested. Clone this repository,
+Use Python 3.11 or newer. Clone this repository,
 or download and extract its ZIP archive:
 
 ```sh
@@ -59,21 +57,12 @@ Or select one experiment:
 | `python run.py table-d6` | Finite-step variance-ratio table |
 
 Add `--workers 1` to use one CPU worker, or `--workers 4` to allow four.
-Experiments run sequentially. The setting controls processes or numerical
-threads as appropriate; it does not request a GPU. All outputs go under
+Experiments run sequentially. All outputs go under
 `results/<experiment>/`, or under the parent supplied with `--output`.
 Rerunning an experiment replaces its generated files in that output directory.
 
-On the validation machine, the complete quick run took about 19 seconds.
-Full Figure 6 took about 6.6 minutes with three CPU processes; Figures 2 and 7
-took about 27 and 12 seconds, respectively. The full Figure 5 grid took about
-13 seconds on one process. Runtime on other CPUs will differ.
-
 The figure experiments write PNG plots, numerical CSV/JSON results and the
-settings used; Appendix D.6 writes its table as CSV/JSON. Quick outputs are
-explicitly identified as reduced-budget runs; omit
-`--quick` for the full experiment. The deterministic schedule curves remain
-cheap enough to calculate fully in either mode.
+settings used; Appendix D.6 writes its table as CSV/JSON.
 
 ## Change the model settings
 
@@ -124,9 +113,7 @@ directory when you want to retain several runs.
   after deduplication), 100 observations, 256 samples per observation
   and 256 projection directions. The paper's random-number protocol is preserved.
 - **Figure 5:** the stated grid of 99,225 schedule candidates, 701 precisions,
-  and budgets 20, 50, 200 and 1,000. Exact positive-term bounds skip sums that
-  cannot improve the current grid optimum. This is a grid search, not a proof
-  of a continuous global optimum.
+  and budgets 20, 50, 200 and 1,000.
 - **Figure 6:** a fresh NumPy CPU simulation with the recorded scientific
   settings: 4,096 mixtures, 64 paths per mixture, batch size 16, seed 0 and
   sampled posterior labels. Its random draws differ from the historical CUDA
