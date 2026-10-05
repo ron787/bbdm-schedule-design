@@ -7,8 +7,7 @@ Diffusion Models**, by Ron Levy and Michael Elad, accepted at TMLR (2026).
 
 This repository covers the analytical calculations and synthetic Gaussian-mixture
 experiments in Figures 1, 2, 3, 5, 6 and 7, and the Appendix D.6 table.
-It uses Python, NumPy, SciPy and Matplotlib. All calculations run on CPU;
-no GPU, PyTorch, C++ compiler, checkpoints or dataset downloads are required.
+It uses Python, NumPy, SciPy and Matplotlib. All calculations run on CPU.
 
 The MNIST fitted-prior experiments in Figures 8–9 and Section 8.4, and the
 trained-model, FFHQ and DPS experiments, are outside this release. This is code
